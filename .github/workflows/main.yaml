@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+env:
+  VITE_USEHOTEL_BACKEND: ${{ secrets.VITE_USEHOTEL_BACKEND }}
 jobs:
   build:
     runs-on: ubuntu-latest
