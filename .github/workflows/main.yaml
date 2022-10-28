@@ -23,6 +23,7 @@ jobs:
         run: yarn
       - name: Build
         run: yarn run build
+      - name: Delete previous build
         run: aws s3 rm s3://usehotelfrontend --recursive
       - name: Set AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
