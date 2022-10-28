@@ -1,0 +1,13 @@
+.photogridimages{
+  width: 15rem;
+  height: 10rem;
+}
+
+.grid-container{
+  padding: 5%;
+}
+
+.container-div{
+  text-align: center;
+  padding: 40px;
+}
