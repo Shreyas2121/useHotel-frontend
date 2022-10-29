@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { UseFetch } from "../../customHook/UseFetch";
 import { Addon } from "../../types/types";
-import "./bookingdetails.css";
+import "./bookingform.css";
 
 interface ResAddon {
   data: Addon[];
@@ -22,11 +22,11 @@ interface State {
   key: string;
 }
 
-export const BookingDetails = () => {
+export const BookingForm = () => {
   const location = useLocation();
   const { no, checkin, checkout, roomType, roomPrice, totalPrice, key }: State =
     location.state;
-  console.log(location.state);
+
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const specialReqRef = useRef<HTMLTextAreaElement>(null);
@@ -35,8 +35,7 @@ export const BookingDetails = () => {
   const [coupon, setCoupon] = useState("");
 
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const buttonRemRef = useRef<HTMLButtonElement>(null);
-  const checkRef = useRef<HTMLInputElement>(null);
+  const buttonCouponRemoveRef = useRef<HTMLButtonElement>(null);
 
   const [apply, setApply] = useState(false);
 
@@ -44,15 +43,15 @@ export const BookingDetails = () => {
 
   let total_price = totalPrice;
 
-  const { data, loading }: ResAddon = UseFetch(`addon`);
+  const { data: addOnData, loading }: ResAddon = UseFetch(`addon`);
   let addOns = {};
   if (!loading) {
-    data.forEach((item) => {
+    addOnData.forEach((item) => {
       addOns[item.name] = Number(item.price);
     });
   }
 
-  const [selectCheck, setSelectCheck] = useState({
+  const [selectedAddons, setSelectedAddons] = useState({
     addon: [],
   });
 
@@ -60,7 +59,7 @@ export const BookingDetails = () => {
   const [discount, setDiscount] = useState(0);
 
   useEffect(() => {
-    Object.values(filtAddOn()).forEach((each: any) => {
+    Object.values(filterAddons()).forEach((each: any) => {
       total_price += each;
     });
     setTotal(
@@ -68,24 +67,24 @@ export const BookingDetails = () => {
         addOnPrice() -
         (total_price + addOnPrice()) * (discount / 100)
     );
-  }, [selectCheck]);
+  }, [selectedAddons]);
 
   const handleAddon = (e) => {
     if (e.target.checked) {
-      setSelectCheck({
-        addon: [...selectCheck.addon, e.target.value],
+      setSelectedAddons({
+        addon: [...selectedAddons.addon, e.target.value],
       });
     }
     if (!e.target.checked) {
-      setSelectCheck({
-        addon: selectCheck.addon.filter((item) => item !== e.target.value),
+      setSelectedAddons({
+        addon: selectedAddons.addon.filter((item) => item !== e.target.value),
       });
     }
   };
 
-  const filtAddOn = () => {
+  const filterAddons = () => {
     let a = {};
-    selectCheck.addon.forEach((each) => {
+    selectedAddons.addon.forEach((each) => {
       if (Object.keys(addOns).includes(each)) {
         a[each] = addOns[each];
       }
@@ -93,9 +92,8 @@ export const BookingDetails = () => {
     return a;
   };
 
-  const handleCoupon = async (e) => {
+  const applyCoupon = async (e) => {
     e.preventDefault();
-    // const coupon = couponRef.current?.value;
     const res = await axios.post("coupon/validate", {
       coupon,
     });
@@ -115,36 +113,64 @@ export const BookingDetails = () => {
 
   const handleRemoveCoupon = async (e) => {
     e.preventDefault();
-    const res = await axios.post("coupon/validate", {
-      coupon,
-    });
     setDiscount(0);
     toast.success("Coupon Removed Successfully");
     couponRef.current.disabled = false;
     setTotal(totalPrice);
-    buttonRemRef.current.disabled = true;
+    buttonCouponRemoveRef.current.disabled = true;
   };
 
   const addOnPrice = () => {
     let price = 0;
-    Object.values(filtAddOn()).forEach((each: any) => {
+    Object.values(filterAddons()).forEach((each: any) => {
       price += each;
     });
     return price;
   };
 
-  const handleSubmit = async (e: any) => {
+  const validateInputFields = () => {
+    if (nameRef.current.value === "" || emailRef.current.value === "") {
+      return false;
+    }
+    return true;
+  };
+
+  const calculateTotalPrice = () => {
+    return (
+      total_price +
+      addOnPrice() -
+      (total_price + addOnPrice()) * (discount / 100)
+    );
+  };
+
+  const bookHall = async (res, data) => {
+    return (res = await axios.post(`booking/hall`, data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }));
+  };
+
+  const bookRoom = async (res, data) => {
+    return (res = await axios.post(`booking/room`, data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }));
+  };
+
+  const submitBooking = async (e: any) => {
     e.preventDefault();
     const name = nameRef.current?.value;
     const email = emailRef.current?.value;
     const specialReq = specialReqRef.current?.value;
 
-    if (name === "" || email === "") {
+    if (!validateInputFields()) {
       toast.error("Please fill all the fields");
       return;
     }
 
-    const selectedAddons = filtAddOn();
+    const selectedAddons = filterAddons();
     const data = {
       name,
       email,
@@ -160,25 +186,14 @@ export const BookingDetails = () => {
         coupon,
         discount: discount.toString(),
       },
-      total:
-        total_price +
-        addOnPrice() -
-        (total_price + addOnPrice()) * (discount / 100),
+      total: calculateTotalPrice(),
     };
     let res: any;
 
     if (key == "Hall") {
-      res = await axios.post(`booking/hall`, data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      res = await bookHall(res, data);
     } else {
-      res = await axios.post(`booking/room`, data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      res = await bookRoom(res, data);
     }
 
     if (res.data.message == "Booking Successful") {
@@ -192,7 +207,7 @@ export const BookingDetails = () => {
   };
 
   return (
-    <Form id="c" onSubmit={handleSubmit}>
+    <Form id="c" onSubmit={submitBooking}>
       <div>
         <Container className="booking-details">
           <div id="container">
@@ -273,7 +288,6 @@ export const BookingDetails = () => {
                   {Object.entries(addOns).map(([key, value]) => (
                     <Form.Group style={{ display: "flex" }}>
                       <Form.Check
-                        ref={checkRef}
                         className="checkbox-Form.Control"
                         id={key}
                         name={key}
@@ -322,13 +336,13 @@ export const BookingDetails = () => {
                   id="coupon-btn"
                   ref={buttonRef}
                   disabled={coupon === ""}
-                  onClick={handleCoupon}
+                  onClick={applyCoupon}
                 >
                   Apply
                 </Button>
                 <Button
                   id="coupon-btn"
-                  ref={buttonRemRef}
+                  ref={buttonCouponRemoveRef}
                   disabled={!apply}
                   onClick={handleRemoveCoupon}
                 >
@@ -437,12 +451,7 @@ export const BookingDetails = () => {
               </tr>
               <tr style={{ fontSize: "1.3rem" }}>
                 <td>Total : </td>
-                <td>
-                  ₹
-                  {total_price +
-                    addOnPrice() -
-                    (total_price + addOnPrice()) * (discount / 100)}
-                </td>
+                <td>₹{calculateTotalPrice()}</td>
               </tr>
               <tr>
                 <td>
@@ -460,4 +469,4 @@ export const BookingDetails = () => {
   );
 };
 
-export default BookingDetails;
+export default BookingForm;

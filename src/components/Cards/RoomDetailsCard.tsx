@@ -27,7 +27,7 @@ interface Props {
   status: Status;
 }
 
-const Roomcards = ({ roomData, checkin, checkout, status }: Props) => {
+const RoomDetailsCard = ({ roomData, checkin, checkout, status }: Props) => {
   const [no, setNo] = useState(1);
   const [avaiRooms, setAvaiRooms] = useState(0);
   const roomType = roomData.category;
@@ -44,7 +44,7 @@ const Roomcards = ({ roomData, checkin, checkout, status }: Props) => {
     }
   };
 
-  const check1 = () => {
+  const checkRoomTypeWithKey = () => {
     Object.entries(status).forEach(([key, value]) => {
       if (roomType === key) {
         setAvaiRooms(value);
@@ -69,8 +69,26 @@ const Roomcards = ({ roomData, checkin, checkout, status }: Props) => {
   };
 
   useEffect(() => {
-    check1();
+    checkRoomTypeWithKey();
   }, []);
+
+  const getTotalPrice = () => {
+    return (
+      roomPrice *
+      no *
+      (Math.abs(checkout.getTime() - checkin.getTime()) / (1000 * 3600 * 24))
+    );
+  };
+
+  const bookingDetails = {
+    no,
+    checkin,
+    checkout,
+    roomType,
+    roomPrice,
+    totalPrice: getTotalPrice(),
+    key: "Room",
+  };
 
   return (
     <MDBContainer className="shadow-4-strong room-container">
@@ -141,11 +159,8 @@ const Roomcards = ({ roomData, checkin, checkout, status }: Props) => {
 
                 <div>
                   <p className="total-price">
-                    Total: ₹{" "}
-                    {roomPrice *
-                      no *
-                      (Math.abs(checkout.getTime() - checkin.getTime()) /
-                        (1000 * 3600 * 24))}
+                    Total: ₹ {}
+                    {getTotalPrice()}
                     /-
                   </p>
                 </div>
@@ -154,20 +169,8 @@ const Roomcards = ({ roomData, checkin, checkout, status }: Props) => {
               <div>
                 <p>
                   <Link
-                    to="/booking"
-                    state={{
-                      no,
-                      checkin,
-                      checkout,
-                      roomType,
-                      roomPrice,
-                      totalPrice:
-                        roomPrice *
-                        no *
-                        (Math.abs(checkout.getTime() - checkin.getTime()) /
-                          (1000 * 3600 * 24)),
-                      key: "Room",
-                    }}
+                    to="/bookings"
+                    state={bookingDetails}
                     className="link-style"
                     id="booknow"
                   >
@@ -185,4 +188,4 @@ const Roomcards = ({ roomData, checkin, checkout, status }: Props) => {
   );
 };
 
-export default Roomcards;
+export default RoomDetailsCard;

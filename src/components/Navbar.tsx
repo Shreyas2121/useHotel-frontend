@@ -12,7 +12,10 @@ const NavBar = () => {
   return (
     <Navbar bg="dark" variant="dark" expand="lg" sticky="top">
       <Container>
-        <Navbar.Brand href="#home"><img src={hotelIcon} />useHotel</Navbar.Brand>
+        <Navbar.Brand href="#home">
+          <img src={hotelIcon} />
+          useHotel
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
@@ -20,10 +23,10 @@ const NavBar = () => {
               Home
             </Nav.Link>
             <NavDropdown title="Book" id="basic-nav-dropdown">
-              <NavDropdown.Item as={Link} to="/booking/room">
+              <NavDropdown.Item as={Link} to="/rooms">
                 Room
               </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/booking/hall">
+              <NavDropdown.Item as={Link} to="/halls">
                 Hall
               </NavDropdown.Item>
             </NavDropdown>
@@ -34,14 +37,11 @@ const NavBar = () => {
 
           <NavDropdown title="More" id="account1">
             <NavDropdown.Item as={Link} to="/checkbooking" id="dropdownbox">
-             Bookings
+              Bookings
             </NavDropdown.Item>
           </NavDropdown>
-
         </Navbar.Collapse>
-        
       </Container>
-      
     </Navbar>
   );
 };

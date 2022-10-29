@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Roomcards from "../components/Cards/Roomcards";
+import RoomDetailsCard from "../components/Cards/RoomDetailsCard";
 import "../components/search.css";
 import "./rooms.css";
 import { UseFetch } from "../customHook/UseFetch";
@@ -30,24 +30,19 @@ interface ResStatus {
 
 const Rooms = () => {
   // window.scrollTo(0, 0);
-  const { data, loading }: Res = UseFetch(`room/getDetails`);
-  console.log(data);
+  const { data: allRooms, loading }: Res = UseFetch(`room/getDetails`);
 
   const [check, setCheck] = useState<any>();
   const [checkIn, setCheckIn] = useState<any>("");
 
   const [checkOut, setCheckOut] = useState<any>();
 
-  console.log(checkOut);
-
   const [status, setStatus] = useState<Status>();
-
-  const [clicked, setClicked] = useState(false);
 
   let checkin = new Date(checkIn);
   let checkout = new Date(checkOut);
 
-  const conv = (date: Date) => {
+  const convertDateToSpecificFormat = (date: Date) => {
     if (date.getMonth() === 12) {
       return `${date.getFullYear() + 1}-01-${date.getDate()}`;
     } else if (date.getMonth() < 12) {
@@ -62,8 +57,6 @@ const Rooms = () => {
         new Date().getMonth() + 1
       }-${new Date().getDate()}`;
   };
-
-  console.log(conv(checkin));
 
   const handleSearch = async (e) => {
     if (checkIn === "" || checkOut === "") {
@@ -82,14 +75,12 @@ const Rooms = () => {
     }
 
     e.preventDefault();
-    const formatedCheckIn = checkin.toISOString();
-    const formatedCheckOut = checkout.toISOString();
 
     const { data }: ResStatus = await axios.post(
       "booking/room/availability",
       {
-        checkIn: formatedCheckIn,
-        checkOut: formatedCheckOut,
+        checkIn: checkin.toISOString(),
+        checkOut: checkout.toISOString(),
       },
       {
         headers: {
@@ -97,17 +88,21 @@ const Rooms = () => {
         },
       }
     );
-    console.log(data);
     setStatus(data);
-    setClicked(true);
     window.scrollTo({
       top: 800,
     });
   };
 
   useEffect(() => {
-    setCheck(conv(checkout));
+    setCheck(convertDateToSpecificFormat(checkout));
   }, [checkIn]);
+
+  const maxAllowedCheckout = () => {
+    let date = new Date(checkIn);
+    date.setDate(date.getDate() + 30);
+    return convertDateToSpecificFormat(date);
+  };
 
   return (
     <header>
@@ -152,18 +147,10 @@ const Rooms = () => {
                   <input
                     id="check-out"
                     className="input-date"
-                    min={conv(checkin)}
-                    max={
-                      checkin.getMonth() === 11
-                        ? `${checkin.getFullYear() + 1}-01-${
-                            checkin.getDate() + 1
-                          }`
-                        : `${checkin.getFullYear()}-${checkin.getMonth() + 2}-${
-                            checkin.getDate() + 1
-                          }`
-                    }
+                    min={convertDateToSpecificFormat(checkin)}
+                    max={maxAllowedCheckout()}
                     type="date"
-                    disabled={checkIn === ""}
+                    disabled={!checkIn}
                     onChange={(e) => setCheckOut(e.target.value)}
                     onKeyDown={(e) => e.preventDefault()}
                   />
@@ -182,17 +169,15 @@ const Rooms = () => {
         </div>
       </div>
 
-      {!clicked ? (
-        <div></div>
-      ) : (
+      {status && (
         <div style={{ margin: "2rem" }}>
           <h6 style={{ marginLeft: "5%" }}>Select Room Type</h6>
           <hr />
           {loading ? (
             <h1>Loading...</h1>
           ) : (
-            data?.rooms.map((room) => (
-              <Roomcards
+            allRooms?.rooms.map((room) => (
+              <RoomDetailsCard
                 key={room._id}
                 roomData={room}
                 checkin={checkin}

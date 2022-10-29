@@ -5,7 +5,7 @@ import { PhotoSlider } from "../PhotoSlider/PhotoSlider";
 import { Hall } from "../../types/types";
 import { Link } from "react-router-dom";
 
-import { MDBContainer, MDBRow, MDBCol } from 'mdb-react-ui-kit';
+import { MDBContainer, MDBRow, MDBCol } from "mdb-react-ui-kit";
 
 import personicon from "../../../public/icons8-user-groups-50.png";
 import tick from "../../../public/icons8-tick-box-26.png";
@@ -24,10 +24,9 @@ interface Props {
 }
 
 const Hallcards = ({ hallData, checkin, checkout, status }: Props) => {
-  
   const [no, setNo] = useState(1);
   const [avaiRooms, setAvaiRooms] = useState(0);
-  
+
   const hallType = hallData.category;
   const hallPrice = Number(hallData.price);
 
@@ -55,9 +54,8 @@ const Hallcards = ({ hallData, checkin, checkout, status }: Props) => {
   }, []);
 
   return (
-  <MDBContainer className="shadow-4-strong room-container">
+    <MDBContainer className="shadow-4-strong room-container">
       <MDBRow>
-
         <MDBCol size="md" className="card-column-one">
           <PhotoSlider images={Object.values(hallData.images)} />
         </MDBCol>
@@ -66,7 +64,7 @@ const Hallcards = ({ hallData, checkin, checkout, status }: Props) => {
           <h3>{hallData.category}</h3>
 
           <p>
-            <img src={personicon} className="max-occupancy"/>
+            <img src={personicon} className="max-occupancy" />
             {hallData.max_guests} (Max Occupancy)
           </p>
 
@@ -76,11 +74,11 @@ const Hallcards = ({ hallData, checkin, checkout, status }: Props) => {
             <span className="amenities-span">Amenities: </span>
 
             {hallData?.amenities.map((room) => (
-              <p className="room-para"><img src={tick} className="tick-img"/> {room}</p>
+              <p className="room-para">
+                <img src={tick} className="tick-img" /> {room}
+              </p>
             ))}
-
           </div>
-
         </MDBCol>
 
         <MDBCol size="md" className="card-column-three">
@@ -95,8 +93,9 @@ const Hallcards = ({ hallData, checkin, checkout, status }: Props) => {
                 <p className="total-price">
                   Total: ₹
                   {hallPrice *
-                      (Math.abs(checkout.getTime() - checkin.getTime()) /
-                        (1000 * 3600 * 24)+1)}
+                    (Math.abs(checkout.getTime() - checkin.getTime()) /
+                      (1000 * 3600 * 24) +
+                      1)}
                   /-
                 </p>
               </div>
@@ -104,17 +103,18 @@ const Hallcards = ({ hallData, checkin, checkout, status }: Props) => {
               <div>
                 <p>
                   <Link
-                    to="/booking"
+                    to="/bookings"
                     state={{
                       no,
                       checkin,
                       checkout,
-                      roomType:hallType,
-                      roomPrice:hallPrice, 
-                      totalPrice:hallPrice*
-                      no *
-                      (Math.abs(checkout.getTime() - checkin.getTime()) /
-                        (1000 * 3600 * 24)),
+                      roomType: hallType,
+                      roomPrice: hallPrice,
+                      totalPrice:
+                        hallPrice *
+                        no *
+                        (Math.abs(checkout.getTime() - checkin.getTime()) /
+                          (1000 * 3600 * 24)),
                       key: "Hall",
                     }}
                     className="link-style"
@@ -125,14 +125,9 @@ const Hallcards = ({ hallData, checkin, checkout, status }: Props) => {
                 </p>
               </div>
             </>
-
           ) : (
-
-            <div className="sold-out">
-              Not Available
-            </div>
+            <div className="sold-out">Not Available</div>
           )}
-
         </MDBCol>
       </MDBRow>
     </MDBContainer>
