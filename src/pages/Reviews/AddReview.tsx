@@ -25,7 +25,7 @@ const AddReview = () => {
   const reviewRef = useRef<HTMLTextAreaElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const handleSubmit = async (e: any) => {
+  const submitReview = async (e: any) => {
     e.preventDefault();
     const name = nameRef.current?.value;
     const email = emailRef.current?.value;
@@ -44,9 +44,8 @@ const AddReview = () => {
       },
     });
 
-    if (res.data.message === "Review added successfully") {
+    if (res.status === 200) {
       toast.success("Review Submitted Successfully");
-      console.log(res.data.message);
       NavigateToAboutUs();
     } else {
       toast.error("Review Submission Failed");
@@ -56,7 +55,7 @@ const AddReview = () => {
   return (
     <Container className="d-flex align-items-center justify-content-center">
       <div className="review-form">
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={submitReview}>
           <h2 className="Form-Title">How Was Your Experience?</h2>
           <br />
           <Form.Group id="name">
