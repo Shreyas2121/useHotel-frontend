@@ -16,15 +16,15 @@ interface State {
   no: number;
   checkin: Date;
   checkout: Date;
-  roomType: string;
-  roomPrice: number;
+  type: string;
+  basePrice: number;
   totalPrice: number;
   key: string;
 }
 
 export const BookingForm = () => {
   const location = useLocation();
-  const { no, checkin, checkout, roomType, roomPrice, totalPrice, key }: State =
+  const { no, checkin, checkout, type, basePrice, totalPrice, key }: State =
     location.state;
 
   const nameRef = useRef<HTMLInputElement>(null);
@@ -180,8 +180,8 @@ export const BookingForm = () => {
       no,
       checkin,
       checkout,
-      roomType,
-      roomPrice,
+      type,
+      basePrice,
       coupon: {
         coupon,
         discount: discount.toString(),
@@ -247,11 +247,21 @@ export const BookingForm = () => {
               <div>
                 <Form.Group>
                   <Form.Label htmlFor="adult" id="checkin">
-                    <p className="bold">Check In : </p>
+                    {key == "Hall" ? (
+                      <p className="bold">From : </p>
+                    ):(
+                      <p className="bold">Check In : </p>
+                    
+                    )}
                     {checkin.toDateString()}
                   </Form.Label>
                   <Form.Label htmlFor="adult" id="checkout">
-                    <p className="bold">Check Out : </p>
+                    {key == "Hall" ? (
+                      <p className="bold">To : </p>
+                    ):(
+                      <p className="bold">Check Out : </p>
+                    
+                    )}
                     {checkout.toDateString()}
                   </Form.Label>
                 </Form.Group>
@@ -271,7 +281,7 @@ export const BookingForm = () => {
                 <Form.Group>
                   <Form.Label htmlFor="adult" id="room-type">
                     <p className="bold">Type : </p>
-                    {roomType}
+                    {type}
                   </Form.Label>
                 </Form.Group>
               </div>
@@ -295,10 +305,12 @@ export const BookingForm = () => {
                         type="checkbox"
                         onChange={handleAddon}
                       />
+                      <div>
                       <Form.Label className="checkbox" id="check-box">
                         {key} <br />{" "}
                       </Form.Label>
-                      <p style={{ fontSize: "0.8rem" }}>₹ {String(value)}</p>
+                      <p className="addon-price">₹{String(value)}</p>
+                      </div>
                     </Form.Group>
                   ))}
                 </div>
@@ -368,20 +380,37 @@ export const BookingForm = () => {
               </tr>
               <tr>
                 <td> Base Price: </td>
-                <td> ₹ {roomPrice}</td>
+                <td> ₹ {basePrice}</td>
               </tr>
-              <tr>
-                <td>Room(s):</td>
-                <td> {no}</td>
-              </tr>
+              {key == "Hall" ? (
+                <tr>
+                  <td>Hall:</td>
+                  <td>{no}</td>
+                </tr>
+              ) : (
+                <tr>
+                  <td>Room(s):</td>
+                  <td>{no}</td>
+                </tr>
+              )}
 
-              <tr>
-                <td>No. of Night(s):</td>
-                <td>
-                  {Math.abs(checkout.getTime() - checkin.getTime()) /
-                    (1000 * 3600 * 24)}
-                </td>
-              </tr>
+              {key == "Hall" ? (
+                <tr>
+                  <td>No. of Day(s):</td>
+                  <td>
+                    {Math.abs(checkout.getTime() - checkin.getTime()) /
+                      (1000 * 3600 * 24)+1}
+                  </td>
+                </tr>
+              ) : (
+                <tr>
+                  <td>No. of Night(s):</td>
+                  <td>
+                    {Math.abs(checkout.getTime() - checkin.getTime()) /
+                      (1000 * 3600 * 24)}
+                  </td>
+                </tr>
+              )}
 
               <td>
                 <hr />
@@ -390,23 +419,29 @@ export const BookingForm = () => {
                 <hr />
               </td>
 
-              <tr>
-                <td
-                  style={{
-                    fontSize: "0.8rem",
-                    fontWeight: "bold",
-                    color: "black",
-                    justifyContent: "left",
-                  }}
-                >
-                  {no} Room(s) x{" "}
-                  {Math.abs(checkout.getTime() - checkin.getTime()) /
-                    (1000 * 3600 * 24)}{" "}
-                  Night(s):
-                </td>
+              {key == "Hall" ? (
+                <tr>
+                  <td className="base-prices">
+                    {no} Hall x{" "}
+                    {Math.abs(checkout.getTime() - checkin.getTime()) /
+                      (1000 * 3600 * 24)}{" "}
+                    Day(s):
+                  </td>
 
-                <td>₹{totalPrice}</td>
-              </tr>
+                  <td>₹{totalPrice}</td>
+                </tr>
+              ) : (
+                <tr>
+                  <td className="base-prices">
+                    {no} Room(s) x{" "}
+                    {Math.abs(checkout.getTime() - checkin.getTime()) /
+                      (1000 * 3600 * 24)}{" "}
+                    Night(s):
+                  </td>
+
+                  <td>₹{totalPrice}</td>
+                </tr>
+              )}
 
               <td>
                 <hr />
@@ -449,7 +484,7 @@ export const BookingForm = () => {
                   <hr />
                 </td>
               </tr>
-              <tr style={{ fontSize: "1.3rem" }}>
+              <tr style={{ fontSize: "1.3rem"}}>
                 <td>Total : </td>
                 <td>₹{calculateTotalPrice()}</td>
               </tr>

@@ -26,7 +26,7 @@ const PhotoGrid = () => {
       <MDBRow className="mb-3">
 
         <MDBCol size="3">
-          <Link to="booking/room">
+          <Link to="/rooms">
             <MDBCard>
               <MDBRipple
                 rippleColor="light"
@@ -54,7 +54,7 @@ const PhotoGrid = () => {
         </MDBCol>
 
         <MDBCol size="3">
-          <Link to="booking/room">
+          <Link to="/rooms">
             <MDBCard>
               <MDBRipple
                 rippleColor="light"
@@ -82,7 +82,7 @@ const PhotoGrid = () => {
         </MDBCol>
 
         <MDBCol size="3">
-          <Link to="booking/room">
+          <Link to="/rooms">
             <MDBCard>
               <MDBRipple
                 rippleColor="light"
@@ -125,7 +125,7 @@ const PhotoGrid = () => {
       <MDBRow className="mb-3">
 
         <MDBCol size="3">
-          <Link to="booking/hall">
+          <Link to="/halls">
             <MDBCard>
               <MDBRipple
                 rippleColor="light"
@@ -153,7 +153,7 @@ const PhotoGrid = () => {
         </MDBCol>
 
         <MDBCol size="3">
-          <Link to="booking/hall">
+          <Link to="/halls">
             <MDBCard>
               <MDBRipple
                 rippleColor="light"
@@ -181,7 +181,7 @@ const PhotoGrid = () => {
         </MDBCol>
 
         <MDBCol size="3">
-          <Link to="booking/hall">
+          <Link to="/halls">
             <MDBCard>
               <MDBRipple
                 rippleColor="light"
@@ -209,6 +209,7 @@ const PhotoGrid = () => {
         </MDBCol>
 
       </MDBRow>
+      <br/>
     </MDBContainer>
   );
 };

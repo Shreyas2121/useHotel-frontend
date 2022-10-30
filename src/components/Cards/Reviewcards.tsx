@@ -6,7 +6,7 @@ import { MDBContainer, MDBTypography } from "mdb-react-ui-kit";
 import { Carousel } from "react-bootstrap";
 import Person from "../../assets/images/person.png";
 import "./slider.css";
-import "./roomcards.css";
+import "./cards.css";
 import Loader from "../../Loader";
 
 interface Res {

@@ -12,7 +12,7 @@ import personicon from "../../../public/icons8-person-64.png";
 import tick from "../../../public/icons8-tick-box-26.png";
 import area from "../../../public/icons8-surface-48.png";
 
-import "./roomcards.css";
+import "./cards.css";
 
 interface Status {
   Basic: number;

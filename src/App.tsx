@@ -14,7 +14,7 @@ import Loader from "./Loader";
 
 const Home = lazy(() => import("./pages/Home"));
 const AboutUs = lazy(() => import("./pages/AboutUs"));
-const Rooms = lazy(() => import("./pages/Rooms"));
+const Rooms = lazy(() => import("./pages/BookRoom"));
 const Halls = lazy(() => import("./pages/BookHall"));
 const BookingForm = lazy(() => import("./pages/BookingDetails/BookingForm"));
 const AddReview = lazy(() => import("./pages/Reviews/AddReview"));
