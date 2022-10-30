@@ -22,7 +22,7 @@ import Footer from "./components/Footer/Footer";
 const Home = lazy(() => import("./pages/Home"));
 const AboutUs = lazy(() => import("./pages/AboutUs"));
 const Rooms = lazy(() => import("./pages/Rooms"));
-const Halls = lazy(() => import("./pages/Halls"));
+const Halls = lazy(() => import("./pages/BookHall"));
 const BookingForm = lazy(() => import("./pages/BookingDetails/BookingForm"));
 const AddReview = lazy(() => import("./pages/Reviews/AddReview"));
 const Checkbooking = lazy(() => import("./pages/Checkbooking"));
