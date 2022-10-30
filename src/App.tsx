@@ -2,6 +2,7 @@ import { useEffect, useState, lazy, Suspense } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import LoadingBar from "react-top-loading-bar";
+import { isMobile, isTablet } from "react-device-detect";
 
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -9,15 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import NavBar from "./components/Navbar";
 import Footer from "./components/Footer/Footer";
-
-// import Home from "./pages/Home";
-// import AboutUs from "./pages/AboutUs";
-// import Rooms from "./pages/Rooms";
-// import Halls from "./pages/Halls";
-// import { BookingForm } from "./pages/BookingDetails/BookingForm";
-// import AddReview from "./pages/Reviews/AddReview";
-// import { Checkbooking } from "./pages/Checkbooking";
-// import ConfirmDetails from "./pages/success/ConfirmDetails";
+import Loader from "./Loader";
 
 const Home = lazy(() => import("./pages/Home"));
 const AboutUs = lazy(() => import("./pages/AboutUs"));
@@ -37,6 +30,31 @@ function App() {
     setProgress(100);
   }, [location]);
 
+  if (isMobile && isTablet) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <h1
+          style={{
+            fontSize: "2rem",
+            fontWeight: "bold",
+            color: "#000",
+            textAlign: "center",
+          }}
+        >
+          Mobile version is not available
+        </h1>
+      </div>
+    );
+  }
+
   return (
     <div>
       <NavBar />
@@ -49,18 +67,7 @@ function App() {
         onLoaderFinished={() => setProgress(0)}
         transitionTime={1000}
       />
-      <Suspense
-        fallback={
-          <div
-            className="d-flex justify-content-center align-items-center"
-            style={{ height: "100vh" }}
-          >
-            <div className="spinner-border text-danger" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </div>
-          </div>
-        }
-      >
+      <Suspense fallback={<Loader />}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="aboutus" element={<AboutUs />} />

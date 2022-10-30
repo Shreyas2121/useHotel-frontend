@@ -11,6 +11,7 @@ import "../components/parallaxImage.css";
 import roomsBackground from "../assets/images/about_banner.jpg";
 import Button from "react-bootstrap/Button";
 import { toast } from "react-toastify";
+import Loader from "../Loader";
 
 interface Res {
   data: {
@@ -29,7 +30,6 @@ interface ResStatus {
 }
 
 const Rooms = () => {
-  // window.scrollTo(0, 0);
   const { data: allRooms, loading }: Res = UseFetch(`room/getDetails`);
 
   const [check, setCheck] = useState<any>();
@@ -89,6 +89,7 @@ const Rooms = () => {
       }
     );
     setStatus(data);
+
     window.scrollTo({
       top: 800,
     });
@@ -174,7 +175,7 @@ const Rooms = () => {
           <h6 style={{ marginLeft: "5%" }}>Select Room Type</h6>
           <hr />
           {loading ? (
-            <h1>Loading...</h1>
+            <Loader />
           ) : (
             allRooms?.rooms.map((room) => (
               <RoomDetailsCard

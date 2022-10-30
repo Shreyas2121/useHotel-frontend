@@ -4,10 +4,10 @@ import { Review } from "../../types/types";
 import { Rating } from "@mui/material";
 import { MDBContainer, MDBTypography } from "mdb-react-ui-kit";
 import { Carousel } from "react-bootstrap";
-import {useEffect} from "react";
 import Person from "../../assets/images/person.png";
 import "./slider.css";
 import "./roomcards.css";
+import Loader from "../../Loader";
 
 interface Res {
   data: {
@@ -17,11 +17,7 @@ interface Res {
 }
 
 const Reviewcards = ({ featured }) => {
-  const { data, loading }: Res = UseFetch(
-    `reviews${featured}`
-
-
-  );
+  const { data, loading }: Res = UseFetch(`reviews${featured}`);
   console.log(data); // this is the data that is being fetched from the backend
 
   return (
@@ -58,50 +54,56 @@ const Reviewcards = ({ featured }) => {
         >
           <Carousel>
             {loading ? (
-              <h1>Loading...</h1>
+              <Loader />
             ) : (
-              data?.Review?.map((review_data) => (
-                console.log(review_data), // this is the data that is being fetched from the backend
-                console.log(review_data),
-                <Carousel.Item>
-                  <div className="carousel-inner py-4">
-                    <div className="carousel-item active" style={{}}>
-                      <div
-                        className="container"
-                        style={{
-                          height: "25rem",
-                        }}
-                      >
-                        <div className="row">
+              data?.Review?.map(
+                (review_data) => (
+                  console.log(review_data), // this is the data that is being fetched from the backend
+                  console.log(review_data),
+                  (
+                    <Carousel.Item>
+                      <div className="carousel-inner py-4">
+                        <div className="carousel-item active" style={{}}>
                           <div
-                            className="col-lg-14 shadow-4-strong"
-                            id="review-cards"
+                            className="container"
+                            style={{
+                              height: "25rem",
+                            }}
                           >
-                            <img
-                              className="rounded-circle shadow-1-strong mb-4"
-                              src={Person}
-                              alt="avatar"
-                              style={{ width: "10%" }}
-                            />
-                            <h5 className="Review-name">{review_data.name}</h5>
-                            <p>
-                              <Rating
-                                name="read-only"
-                                value={review_data.rating}
-                                readOnly
-                              />{" "}
-                            </p>
-                            <p className="review-text">
-                              <i className="fas fa50%-quote-left pe-2"></i>
-                              {review_data.review}
-                            </p>
+                            <div className="row">
+                              <div
+                                className="col-lg-14 shadow-4-strong"
+                                id="review-cards"
+                              >
+                                <img
+                                  className="rounded-circle shadow-1-strong mb-4"
+                                  src={Person}
+                                  alt="avatar"
+                                  style={{ width: "10%" }}
+                                />
+                                <h5 className="Review-name">
+                                  {review_data.name}
+                                </h5>
+                                <p>
+                                  <Rating
+                                    name="read-only"
+                                    value={review_data.rating}
+                                    readOnly
+                                  />{" "}
+                                </p>
+                                <p className="review-text">
+                                  <i className="fas fa50%-quote-left pe-2"></i>
+                                  {review_data.review}
+                                </p>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                </Carousel.Item>
-              ))
+                    </Carousel.Item>
+                  )
+                )
+              )
             )}
           </Carousel>
         </div>
