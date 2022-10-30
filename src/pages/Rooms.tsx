@@ -150,7 +150,6 @@ const Rooms = () => {
                     }
                     type="date"
                     onChange={(e) => setCheckIn(e.target.value)}
-                    onKeyDown={(e) => e.preventDefault()}
                   />
                   Check-out:{" "}
                   <input
@@ -161,7 +160,6 @@ const Rooms = () => {
                     type="date"
                     disabled={!checkIn}
                     onChange={(e) => setCheckOut(e.target.value)}
-                    onKeyDown={(e) => e.preventDefault()}
                   />
                 </div>
                 <Button
