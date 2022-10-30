@@ -12,7 +12,7 @@ const Aboutus = () => {
     navigate("/addreview/");
   };
 
-  let isHomepage = "";
+  let isHomepage = false;
 
   return (
     <div>
@@ -117,7 +117,7 @@ const Aboutus = () => {
           </div>
         </div>
 
-        <Reviewcards featured={isHomepage} />
+        <Reviewcards isFeatured={isHomepage} />
 
         <br />
         <br />

@@ -15,10 +15,17 @@ interface Res {
   };
   loading: boolean;
 }
+let path
+const Reviewcards = ({ isFeatured }) => {
+ 
+   if(isFeatured===true){
+    path="reviews/featured"
+   }
+    else{
+    path="reviews"
+    }
 
-const Reviewcards = ({ featured }) => {
-  const { data, loading }: Res = UseFetch(`reviews${featured}`);
-  console.log(data); // this is the data that is being fetched from the backend
+  const { data, loading }: Res = UseFetch(`${path}`);
 
   return (
     <MDBContainer
