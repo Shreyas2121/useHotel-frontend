@@ -20,20 +20,19 @@ interface Props {
   hallData: Hall;
   checkin: Date;
   checkout: Date;
-  status: Status;
+  availability: Status;
 }
 
-const Hallcards = ({ hallData, checkin, checkout, status }: Props) => {
-  const [no, setNo] = useState(1);
+const Hallcards = ({ hallData, checkin, checkout, availability }: Props) => {
   const [avaiRooms, setAvaiRooms] = useState(0);
-
+  const numberOfHalls = 1;
   const hallType = hallData.category;
   const hallPrice = Number(hallData.price);
 
-  const check = () => {
-    let keys = Object.keys(status);
+  const checkAvailability = () => {
+    let keys = Object.keys(availability);
     if (keys.includes(hallType)) {
-      if (status[hallType] > 0) {
+      if (availability[hallType] > 0) {
         return true;
       } else {
         return false;
@@ -41,8 +40,12 @@ const Hallcards = ({ hallData, checkin, checkout, status }: Props) => {
     }
   };
 
-  const check1 = () => {
-    Object.entries(status).forEach(([key, value]) => {
+  const getTotalPrice = () => {
+    return (hallPrice * numberOfHalls * (Math.abs(checkout.getTime() - checkin.getTime()) / (1000 * 3600 * 24) +1 ))
+  };
+
+  const checkHallTypeWithKey = () => {
+    Object.entries(availability).forEach(([key, value]) => {
       if (hallType === key) {
         setAvaiRooms(value);
       }
@@ -50,8 +53,18 @@ const Hallcards = ({ hallData, checkin, checkout, status }: Props) => {
   };
 
   useEffect(() => {
-    check1();
+    checkHallTypeWithKey();
   }, []);
+
+  const bookingDetails = {
+    numberOfHalls,
+    checkin,
+    checkout,
+    type: hallType,
+    price: hallPrice,
+    totalPrice: getTotalPrice(),
+    key: "Hall",
+  };
 
   return (
     <MDBContainer className="shadow-4-strong room-container">
@@ -87,15 +100,12 @@ const Hallcards = ({ hallData, checkin, checkout, status }: Props) => {
             <p className="room-price">₹ {hallPrice}/-</p>
           </div>
 
-          {check() ? (
+          {checkAvailability() ? (
             <>
               <div>
                 <p className="total-price">
                   Total: ₹
-                  {hallPrice *
-                    (Math.abs(checkout.getTime() - checkin.getTime()) /
-                      (1000 * 3600 * 24) +
-                      1)}
+                  {getTotalPrice()}
                   /-
                 </p>
               </div>
@@ -104,19 +114,7 @@ const Hallcards = ({ hallData, checkin, checkout, status }: Props) => {
                 <p>
                   <Link
                     to="/bookings"
-                    state={{
-                      no,
-                      checkin,
-                      checkout,
-                      roomType: hallType,
-                      roomPrice: hallPrice,
-                      totalPrice:
-                        hallPrice *
-                        no *
-                        (Math.abs(checkout.getTime() - checkin.getTime()) /
-                          (1000 * 3600 * 24)),
-                      key: "Hall",
-                    }}
+                    state={bookingDetails}
                     className="link-style"
                     id="booknow"
                   >

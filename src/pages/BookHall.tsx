@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { UseFetch } from "../customHook/UseFetch";
 import { Hall } from "../types/types";
-import Hallcards from "../components/Cards/Hallcards";
+import HallDetailsCard from "../components/Cards/HallDetailsCard";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
-import "../components/search.css";
 
+import "../components/search.css";
 import "../components/parallaxImage.css";
 
 import roomsBackground from "../assets/images/about_banner.jpg";
+import { toast } from "react-toastify";
 
 interface Res {
   data: {
@@ -18,67 +19,76 @@ interface Res {
   loading: boolean;
 }
 
-interface Status {
+interface availability {
   Birthday: number;
   Conference: number;
   Wedding: number;
 }
 
-interface ResStatus {
-  data: Status;
+interface Resavailability {
+  data: availability;
 }
 
 const Halls = () => {
-  const { data, loading }: Res = UseFetch(
-    "hall"
-  );
+  const { data: allHalls, loading }: Res = UseFetch("hall");
 
-  const [checkIn, setCheckIn] = useState("");
-  const [checkOut, setCheckOut] = useState("");
+  const [check, setCheck] = useState<any>();
 
-  const [status, setStatus] = useState<Status>();
-
-  // const [hallData, setHallData] = useState([]);
-
+  const [checkIn, setCheckIn] = useState<any>("");
+  const [checkOut, setCheckOut] = useState<any>();
+  const [availability, setAvailability] = useState<availability>();
   const [clicked, setClicked] = useState(false);
-
-  const [value, setValue] = useState("");
-
-  const selectRef = React.useRef<HTMLSelectElement>(null);
+  const [hallType, setHallType] = useState("");
 
   let checkin = new Date(checkIn);
   let checkout = new Date(checkOut);
 
-  const conv = (date: Date) => {
-
+  const convertDateToSpecificFormat = (date: Date) => {
     if (date.getMonth() === 12) {
       return `${date.getFullYear() + 1}-01-${date.getDate()}`;
-    } 
-    else if (date.getMonth() < 12) {
+    } else if (date.getMonth() < 12) {
       if (date.getDate() < 10) {
-        return `${date.getFullYear()}-${date.getMonth() + 1}-0${date.getDate()}`;
-      }
-      else
-          return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-      }
-    else return `${new Date().getFullYear() + 1}-${new Date().getMonth() + 1}-${new Date().getDate()}`; 
-
+        return `${date.getFullYear()}-${
+          date.getMonth() + 1
+        }-0${date.getDate()}`;
+      } else
+        return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+    } else
+      return `${new Date().getFullYear() + 1}-${
+        new Date().getMonth() + 1
+      }-${new Date().getDate()}`;
   };
 
   const handleSearch = async (e) => {
+    if (!checkIn || !checkOut || !hallType) {
+      toast.error("Please select hall type, checkin and checkout dates");
+      return;
+    }
+
+    if (checkin > checkout) {
+      toast.error("Checkin date cannot be greater than checkout date");
+      return;
+    }
+
     e.preventDefault();
-    const formatedCheckIn = checkin.toISOString();
-    const formatedCheckOut = checkout.toISOString();
-    const valueNew = selectRef.current.value;
 
-    const { data }: ResStatus = await axios.get(`booking/hall/availability?checkIn=${formatedCheckIn}&checkOut=${formatedCheckOut}`);
+    const { data }: Resavailability = await axios.get(`booking/hall/availability?checkIn=${checkin.toISOString()}&checkOut=${checkout.toISOString()}`);
 
-    setValue(valueNew);
-    setStatus(data);
+    setAvailability(data);
     setClicked(true);
     window.scrollTo({
       top: 800,
     });
+  };
+
+  useEffect(() => {
+    setCheck(convertDateToSpecificFormat(checkout));
+  }, [checkIn]);
+
+  const maxAllowedCheckout = () => {
+    let date = new Date(checkIn);
+    date.setDate(date.getDate() + 15);
+    return convertDateToSpecificFormat(date);
   };
 
   return (
@@ -98,26 +108,15 @@ const Halls = () => {
               <div
                 id="search"
                 className="search"
-                style={{
-                  display: "flex",
-                  width: "80rem",
-                  margin: "auto",
-                }}
               >
-                <div
-                  style={{
-                    width: "70%",
-                    display: "flex",
-                    justifyContent: "space-evenly",
-                    height: "2rem",
-                  }}
-                >
-                  Type:
+                <div className="search-inner-box">
+                  Hall Type:
                   <select
+                    id="select-hall-type"
                     className="input-select"
                     aria-label="Default select example"
-                    ref={selectRef}
                     required
+                    onChange={(e) => setHallType(e.target.value)}
                   >
                     <option>Select Type</option>
                     <option value="Conference">Conference</option>
@@ -129,7 +128,7 @@ const Halls = () => {
                     id="check-in"
                     className="input-date"
                     min={new Date().toISOString().split("T")[0]}
-                    max={conv(checkout)}
+                    max={check}
                     type="date"
                     onChange={(e) => setCheckIn(e.target.value)}
                     onKeyDown={(e) => e.preventDefault()}
@@ -139,18 +138,10 @@ const Halls = () => {
                   <input
                     id="check-out"
                     className="input-date"
-                    min={conv(checkin)}
-                    max={
-                      checkin.getMonth() === 11
-                        ? `${checkin.getFullYear() + 1}-01-${
-                            checkin.getDate() + 1
-                          }`
-                        : `${checkin.getFullYear()}-${checkin.getMonth() + 2}-${
-                            checkin.getDate() + 1
-                          }`
-                    }
+                    min={convertDateToSpecificFormat(checkin)}
+                    max={maxAllowedCheckout()}
                     type="date"
-                    disabled={checkIn === ""}
+                    disabled={!checkIn}
                     onChange={(e) => setCheckOut(e.target.value)}
                     onKeyDown={(e) => e.preventDefault()}
                     required
@@ -181,21 +172,18 @@ const Halls = () => {
           {loading ? (
             <h1>Loading...</h1>
           ) : (
-            data?.halls.map((hall) => {
-              if (hall.category === value) {
-                return (
-                  <Hallcards
-                    key={hall._id}
-                    hallData={hall}
+            allHalls?.halls.filter((hall)=>hall.category === hallType).map((item)=>(
+              Object.keys(availability).includes(item.category) && availability[item.category] > 0) && (
+                        <HallDetailsCard
+                    key={item._id}
+                    hallData={item}
                     checkin={checkin}
-                    // bookedHalls={hallData}
                     checkout={checkout}
-                    status={status}
+                    availability={availability}
                   />
-                );
-              }
-            })
-          )}
+              )
+            ))
+          }
         </div>
       )}
     </header>
