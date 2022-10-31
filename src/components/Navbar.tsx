@@ -12,7 +12,7 @@ const NavBar = () => {
   return (
     <Navbar bg="dark" variant="dark" expand="lg" sticky="top">
       <Container>
-        <Navbar.Brand href="#home">
+        <Navbar.Brand href="/">
           <img src={hotelIcon} />
           useHotel
         </Navbar.Brand>

@@ -33,10 +33,8 @@ const Home = () => {
                 A Best Place To Stay
               </h1>
               <h6 className="mb-3">MAKE YOUR VACATION HAPPY</h6>
-              <a className="btn btn-outline-light btn-lg" role="button">
-                <Link to="booking/room" style={{ color: "white" }}>
-                  Book Now
-                </Link>
+              <a href="/rooms"  className="btn btn-outline-light btn-lg" role="button" >
+                Book Now
               </a>
             </div>
           </div>
