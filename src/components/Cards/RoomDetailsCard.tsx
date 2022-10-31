@@ -84,8 +84,8 @@ const RoomDetailsCard = ({ roomData, checkin, checkout, status }: Props) => {
     no,
     checkin,
     checkout,
-    roomType,
-    roomPrice,
+    type: roomType,
+    basePrice: roomPrice,
     totalPrice: getTotalPrice(),
     key: "Room",
   };

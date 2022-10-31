@@ -26,6 +26,7 @@ export const BookingForm = () => {
   const location = useLocation();
   const { no, checkin, checkout, type, basePrice, totalPrice, key }: State =
     location.state;
+  console.log(location.state);
 
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
@@ -180,7 +181,7 @@ export const BookingForm = () => {
       no,
       checkin,
       checkout,
-      type,
+      category:type,
       basePrice,
       coupon: {
         coupon,
@@ -249,18 +250,16 @@ export const BookingForm = () => {
                   <Form.Label htmlFor="adult" id="checkin">
                     {key == "Hall" ? (
                       <p className="bold">From : </p>
-                    ):(
+                    ) : (
                       <p className="bold">Check In : </p>
-                    
                     )}
                     {checkin.toDateString()}
                   </Form.Label>
                   <Form.Label htmlFor="adult" id="checkout">
                     {key == "Hall" ? (
                       <p className="bold">To : </p>
-                    ):(
+                    ) : (
                       <p className="bold">Check Out : </p>
-                    
                     )}
                     {checkout.toDateString()}
                   </Form.Label>
@@ -306,10 +305,10 @@ export const BookingForm = () => {
                         onChange={handleAddon}
                       />
                       <div>
-                      <Form.Label className="checkbox" id="check-box">
-                        {key} <br />{" "}
-                      </Form.Label>
-                      <p className="addon-price">₹{String(value)}</p>
+                        <Form.Label className="checkbox" id="check-box">
+                          {key} <br />{" "}
+                        </Form.Label>
+                        <p className="addon-price">₹{String(value)}</p>
                       </div>
                     </Form.Group>
                   ))}
@@ -399,7 +398,8 @@ export const BookingForm = () => {
                   <td>No. of Day(s):</td>
                   <td>
                     {Math.abs(checkout.getTime() - checkin.getTime()) /
-                      (1000 * 3600 * 24)+1}
+                      (1000 * 3600 * 24) +
+                      1}
                   </td>
                 </tr>
               ) : (
@@ -484,7 +484,7 @@ export const BookingForm = () => {
                   <hr />
                 </td>
               </tr>
-              <tr style={{ fontSize: "1.3rem"}}>
+              <tr style={{ fontSize: "1.3rem" }}>
                 <td>Total : </td>
                 <td>₹{calculateTotalPrice()}</td>
               </tr>
