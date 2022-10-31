@@ -24,7 +24,7 @@ interface Props {
 }
 
 const Hallcards = ({ hallData, checkin, checkout, availability }: Props) => {
-  const [avaiRooms, setAvaiRooms] = useState(0);
+  const [avaiHalls, setAvaiHalls] = useState(0);
   const numberOfHalls = 1;
   const hallType = hallData.category;
   const hallPrice = Number(hallData.price);
@@ -47,7 +47,7 @@ const Hallcards = ({ hallData, checkin, checkout, availability }: Props) => {
   const checkHallTypeWithKey = () => {
     Object.entries(availability).forEach(([key, value]) => {
       if (hallType === key) {
-        setAvaiRooms(value);
+        setAvaiHalls(value);
       }
     });
   };

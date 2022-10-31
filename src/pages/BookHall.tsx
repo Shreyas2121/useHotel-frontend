@@ -79,6 +79,7 @@ const Halls = () => {
     window.scrollTo({
       top: 800,
     });
+    console.log(data);
   };
 
   useEffect(() => {
@@ -173,7 +174,7 @@ const Halls = () => {
             <h1>Loading...</h1>
           ) : (
             allHalls?.halls.filter((hall)=>hall.category === hallType).map((item)=>(
-              Object.keys(availability).includes(item.category) && availability[item.category] > 0) && (
+              Object.keys(availability).includes(item.category)) && (
                         <HallDetailsCard
                     key={item._id}
                     hallData={item}
