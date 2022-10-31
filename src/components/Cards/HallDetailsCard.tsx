@@ -60,6 +60,7 @@ const Hallcards = ({ hallData, checkin, checkout, availability }: Props) => {
     no : numberOfHalls,
     checkin,
     checkout,
+    numOfDays : Math.abs(checkout.getTime() - checkin.getTime()) / (1000 * 3600 * 24) +1,
     type : hallType,
     basePrice : hallPrice,
     totalPrice : getTotalPrice(),

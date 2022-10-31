@@ -16,6 +16,7 @@ interface State {
   no: number;
   checkin: Date;
   checkout: Date;
+  numOfDays: number;
   type: string;
   basePrice: number;
   totalPrice: number;
@@ -24,7 +25,7 @@ interface State {
 
 export const BookingForm = () => {
   const location = useLocation();
-  const { no, checkin, checkout, type, basePrice, totalPrice, key }: State =
+  const { no, checkin, checkout, numOfDays, type, basePrice, totalPrice, key }: State =
     location.state;
   console.log(location.state);
 
@@ -397,17 +398,14 @@ export const BookingForm = () => {
                 <tr>
                   <td>No. of Day(s):</td>
                   <td>
-                    {Math.abs(checkout.getTime() - checkin.getTime()) /
-                      (1000 * 3600 * 24) +
-                      1}
+                    {numOfDays}
                   </td>
                 </tr>
               ) : (
                 <tr>
                   <td>No. of Night(s):</td>
                   <td>
-                    {Math.abs(checkout.getTime() - checkin.getTime()) /
-                      (1000 * 3600 * 24)}
+                    {numOfDays}
                   </td>
                 </tr>
               )}
@@ -423,8 +421,7 @@ export const BookingForm = () => {
                 <tr>
                   <td className="base-prices">
                     {no} Hall x{" "}
-                    {Math.abs(checkout.getTime() - checkin.getTime()) /
-                      (1000 * 3600 * 24)}{" "}
+                    {numOfDays}{" "}
                     Day(s):
                   </td>
 
