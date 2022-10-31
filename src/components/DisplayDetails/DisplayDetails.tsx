@@ -10,22 +10,24 @@ import { Checkmark } from "react-checkmark";
 
 
 interface Props {
-  bookingDetails: BookingRoom[];
+  RoomBookingDetails: BookingRoom[];
   setDel: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const DisplayDetails = ({ bookingDetails, setDel }: Props) => {
-  console.log(bookingDetails);
-  const handleSubmit = async (id: string) => {
+
+const DisplayDetails = ({ RoomBookingDetails, setDel }: Props) => {  
+  const deleteRoombooking = async (id: string) => {
     const res = await axios.delete(`booking/room/${id}`);
     console.log(res);
     if (res.status === 200) {
       setDel(true);
       toast.success("Reservation deleted successfully");
+      
     } else {
       toast.error("Something went wrong");
     }
   };
+
   const check_ongoin = (checkin: string, checkout: string) => {
     const checkin_date = new Date(checkin);
     const checkout_date = new Date(checkout);
@@ -74,7 +76,7 @@ const DisplayDetails = ({ bookingDetails, setDel }: Props) => {
           </tr>
         </thead>
         <tbody>
-          {bookingDetails.map((booking) => (
+          {RoomBookingDetails.map((booking) => (
             <>
               {booking._id ? (
                 <tr>
@@ -107,7 +109,7 @@ const DisplayDetails = ({ bookingDetails, setDel }: Props) => {
                       <span>
                         {check_ongoin(
                           booking.check_in_date,
-                          booking.check_out_date
+                          booking.check_out_date  
                         ) ? (
                           <span id="Ongoing">
                             ---
@@ -130,7 +132,7 @@ const DisplayDetails = ({ bookingDetails, setDel }: Props) => {
                       </span>
                     ) : (
                       <Button
-                        onClick={(e) => handleSubmit(booking._id)}
+                        onClick={(e) => deleteRoombooking(booking._id)}
                         id="Cancel_Booking"
                       >
                         Cancel Booking
