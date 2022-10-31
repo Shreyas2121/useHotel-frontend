@@ -1,4 +1,3 @@
-import { Rating } from "@mui/material";
 import axios from "axios";
 import React from "react";
 import { useRef, useState } from "react";
@@ -8,6 +7,8 @@ import Form from "react-bootstrap/Form";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "./Reviews.css";
+
+import RatingCard from "react-star-ratings";
 
 const AddReview = () => {
   const navigate = useNavigate();
@@ -74,13 +75,23 @@ const AddReview = () => {
               display: "flex",
             }}
           >
-            <Form.Label>Rating : </Form.Label>
-            <Rating
-              name="simple-controlled"
-              value={rating}
-              onChange={(event, newValue) => {
-                setRating(newValue);
+            <Form.Label
+              style={{
+                marginRight: "10px",
               }}
+            >
+              Rating :{" "}
+            </Form.Label>
+
+            <RatingCard
+              rating={rating}
+              starRatedColor="orange"
+              starHoverColor="orange"
+              changeRating={(newRating) => setRating(newRating)}
+              numberOfStars={5}
+              starDimension="25px"
+              starSpacing="3px"
+              name="rating"
             />
           </Form.Group>
           <br />
