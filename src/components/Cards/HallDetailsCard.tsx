@@ -57,12 +57,12 @@ const Hallcards = ({ hallData, checkin, checkout, availability }: Props) => {
   }, []);
 
   const bookingDetails = {
-    numberOfHalls,
+    no : numberOfHalls,
     checkin,
     checkout,
-    type: hallType,
-    price: hallPrice,
-    totalPrice: getTotalPrice(),
+    type : hallType,
+    basePrice : hallPrice,
+    totalPrice : getTotalPrice(),
     key: "Hall",
   };
 
