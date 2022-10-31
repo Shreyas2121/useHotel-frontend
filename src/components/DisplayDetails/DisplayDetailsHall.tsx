@@ -9,12 +9,12 @@ import "./DisplayDetails.css";
 import { Checkmark } from "react-checkmark";
 
 interface Props {
-  bookingDetails1: BookingHall[];
+  HallBookingDetails: BookingHall[];
   setDel: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const DisplayDetailsHall = ({ bookingDetails1, setDel }: Props) => {
-  const handleSubmit = async (id: string) => {
+const DisplayDetailsHall = ({HallBookingDetails, setDel }: Props) => {
+  const deleteHallbooking = async (id: string) => {
     const res = await axios.delete(
       `booking/hall/${id}`
     );
@@ -73,7 +73,7 @@ const DisplayDetailsHall = ({ bookingDetails1, setDel }: Props) => {
           </tr>
         </thead>
         <tbody>
-          {bookingDetails1.map((booking) => (
+          {HallBookingDetails.map((booking) => (
             <>
               {booking._id ? (
                 <tr>
@@ -129,7 +129,7 @@ const DisplayDetailsHall = ({ bookingDetails1, setDel }: Props) => {
                       </span>
                     ) : (
                       <Button
-                        onClick={(e) => handleSubmit(booking._id)}
+                        onClick={(e) => deleteHallbooking(booking._id)}
                         id="Cancel_Booking"
                       >
                         Cancel Booking

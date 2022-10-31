@@ -27,8 +27,6 @@ const Service = () => {
     className="parallax"
     >
       <br/>
-      <br/>
-      <br/>
       <div className="container-top-div">
         <MDBTypography tag='h1' className='mb-0' style={{color:"black", fontWeight:"bold"}}>
           Royal Facilities

@@ -24,11 +24,12 @@ interface Res1 {
 
 export const Checkbooking = () => {
   const emailRef = React.useRef<HTMLInputElement>(null);
-  const [bookingDetails, setBookingDetails] = React.useState<BookingRoom[]>(null);
-  const [bookingDetails1, setBookingDetailsHall] = React.useState<BookingHall[]>(null);
+  const [RoomBookingDetails, setBookingDetailsRoom] = React.useState<BookingRoom[]>(null);
+  const [HallBookingDetails, setBookingDetailsHall] = React.useState<BookingHall[]>(null);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [clicked, setClicked] = React.useState<boolean>(false);
   const [del, setDel] = React.useState<boolean>(false);
+  const buttonRef = React.useRef<HTMLButtonElement>(null);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -37,7 +38,7 @@ export const Checkbooking = () => {
     const { data }: Res = await axios.get(
       `booking/room/${email}`
     );
-    setBookingDetails(data);
+    setBookingDetailsRoom(data);
 
     const res: Res1 = await axios.get(
       `booking/hall/${email}`
@@ -60,7 +61,7 @@ export const Checkbooking = () => {
       const { data }: Res = await axios.get(
         `booking/room/${email}`
       );
-      setBookingDetails(data);
+      setBookingDetailsRoom(data);
 
 
       const res : Res1 = await axios.get(
@@ -96,8 +97,20 @@ export const Checkbooking = () => {
             left: "50%",
             transform: "translate(-50%, -50%)",
             width: "100%",
-            maxWidth: "600px",
+            maxWidth: "100%",
             padding: "2rem",
+            justifyContent:  "space-around"
+
+
+          }}
+        > <Form onSubmit={handleSubmit}
+          style={{
+            width: "100%",
+            maxWidth: "600px",
+            padding: "1rem",
+            display: "flex",
+            flexDirection: "row",
+            
           }}
         >
           <Form.Control
@@ -105,10 +118,14 @@ export const Checkbooking = () => {
             type="email"
             className="me-auto"
             placeholder="Enter Email"
+
+            
           />
-          <Button onClick={handleSubmit} type="button" variant="secondary">
+          
+          <Button type="submit" variant="secondary"  ref={buttonRef}>
             Check
           </Button>
+        </Form>
         </Stack>
       </div>
 
@@ -118,7 +135,7 @@ export const Checkbooking = () => {
             <br />
             <br />
             {loading ? (
-              <div></div>
+              <h1>Loading</h1>
             ) : (
               <div>
                 <div
@@ -128,9 +145,9 @@ export const Checkbooking = () => {
                     gap: "1rem",
                   }}
                 >
-                  {bookingDetails?.length ? (
+                  {RoomBookingDetails?.length ? (
                     <DisplayDetails
-                      bookingDetails={bookingDetails}
+                      RoomBookingDetails={RoomBookingDetails}
                       setDel={setDel}
                     />
                   ) : (
@@ -153,10 +170,10 @@ export const Checkbooking = () => {
                     gap: "1rem",
                   }}
                 >
-                  {bookingDetails1?.length ? (
+                  {HallBookingDetails?.length ? (
                 
                     <DisplayDetailsHall
-                      bookingDetails1={bookingDetails1}
+                      HallBookingDetails={HallBookingDetails}
                       setDel={setDel}
                     />
                   ) : (
