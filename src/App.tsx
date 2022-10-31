@@ -30,7 +30,7 @@ function App() {
     setProgress(100);
   }, [location]);
 
-  if (isMobile && isTablet) {
+  if (isMobile || isTablet) {
     return (
       <div
         style={{

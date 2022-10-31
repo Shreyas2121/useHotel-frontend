@@ -15,15 +15,13 @@ interface Res {
   };
   loading: boolean;
 }
-let path
+let path;
 const Reviewcards = ({ isFeatured }) => {
- 
-   if(isFeatured===true){
-    path="reviews/featured"
-   }
-    else{
-    path="reviews"
-    }
+  if (isFeatured === true) {
+    path = "reviews/featured";
+  } else {
+    path = "reviews";
+  }
 
   const { data, loading }: Res = UseFetch(`${path}`);
 
@@ -63,54 +61,46 @@ const Reviewcards = ({ isFeatured }) => {
             {loading ? (
               <Loader />
             ) : (
-              data?.Review?.map(
-                (review_data) => (
-                  console.log(review_data), // this is the data that is being fetched from the backend
-                  console.log(review_data),
-                  (
-                    <Carousel.Item>
-                      <div className="carousel-inner py-4">
-                        <div className="carousel-item active" style={{}}>
+              data?.Review?.map((review_data) => (
+                <Carousel.Item>
+                  <div className="carousel-inner py-4">
+                    <div className="carousel-item active" style={{}}>
+                      <div
+                        className="container"
+                        style={{
+                          height: "25rem",
+                        }}
+                      >
+                        <div className="row">
                           <div
-                            className="container"
-                            style={{
-                              height: "25rem",
-                            }}
+                            className="col-lg-14 shadow-4-strong"
+                            id="review-cards"
                           >
-                            <div className="row">
-                              <div
-                                className="col-lg-14 shadow-4-strong"
-                                id="review-cards"
-                              >
-                                <img
-                                  className="rounded-circle shadow-1-strong mb-4"
-                                  src={Person}
-                                  alt="avatar"
-                                  style={{ width: "10%" }}
-                                />
-                                <h5 className="Review-name">
-                                  {review_data.name}
-                                </h5>
-                                <p>
-                                  <Rating
-                                    name="read-only"
-                                    value={review_data.rating}
-                                    readOnly
-                                  />{" "}
-                                </p>
-                                <p className="review-text">
-                                  <i className="fas fa50%-quote-left pe-2"></i>
-                                  {review_data.review}
-                                </p>
-                              </div>
-                            </div>
+                            <img
+                              className="rounded-circle shadow-1-strong mb-4"
+                              src={Person}
+                              alt="avatar"
+                              style={{ width: "10%" }}
+                            />
+                            <h5 className="Review-name">{review_data.name}</h5>
+                            <p>
+                              <Rating
+                                name="read-only"
+                                value={review_data.rating}
+                                readOnly
+                              />{" "}
+                            </p>
+                            <p className="review-text">
+                              <i className="fas fa50%-quote-left pe-2"></i>
+                              {review_data.review}
+                            </p>
                           </div>
                         </div>
                       </div>
-                    </Carousel.Item>
-                  )
-                )
-              )
+                    </div>
+                  </div>
+                </Carousel.Item>
+              ))
             )}
           </Carousel>
         </div>
