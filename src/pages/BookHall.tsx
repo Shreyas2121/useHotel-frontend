@@ -32,6 +32,9 @@ interface Resavailability {
 const Halls = () => {
   const { data: allHalls, loading }: Res = UseFetch("hall");
 
+  const bookingHall =
+    "https://content3.jdmagicbox.com/comp/jaipur/i6/0141px141.x141.211124181714.w3i6/catalogue/greet-banquet-hall-m-i-road-jaipur-banquet-halls-n91h0ooj1t.jpg?clr=664400";
+
   const [check, setCheck] = useState<any>();
 
   const [checkIn, setCheckIn] = useState<any>("");
@@ -72,7 +75,9 @@ const Halls = () => {
 
     e.preventDefault();
 
-    const { data }: Resavailability = await axios.get(`booking/hall/availability?checkIn=${checkin.toISOString()}&checkOut=${checkout.toISOString()}`);
+    const { data }: Resavailability = await axios.get(
+      `booking/hall/availability?checkIn=${checkin.toISOString()}&checkOut=${checkout.toISOString()}`
+    );
 
     setAvailability(data);
     setClicked(true);
@@ -96,20 +101,17 @@ const Halls = () => {
     <header>
       <div
         className="p-5 text-center bg-image parallax"
-        style={{ backgroundImage: `url(${roomsBackground})`, height: "50rem" }}
+        style={{ backgroundImage: `url(${bookingHall})`, height: "50rem" }}
       >
         <div className="mask" style={{ backgroundColor: "rgba(0, 0, 0, 0.6)" }}>
           <div className="d-flex justify-content-center align-items-center h-100">
             <div className="text-white">
               <h1 className="mb-3">HALLS</h1>
-              <h4 className="mb-3">AWAY FROM MONOTONOUS LIFE</h4>
+              <h4 className="mb-3">MAKE MERMORIES WITH YOUR LOVED ONES</h4>
               <br />
               <br />
               <br />
-              <div
-                id="search"
-                className="search"
-              >
+              <div id="search" className="search">
                 <div className="search-inner-box">
                   Hall Type:
                   <select
@@ -181,18 +183,21 @@ const Halls = () => {
           {loading ? (
             <h1>Loading...</h1>
           ) : (
-            allHalls?.halls.filter((hall)=>hall.category === hallType).map((item)=>(
-              Object.keys(availability).includes(item.category)) && (
-                        <HallDetailsCard
-                    key={item._id}
-                    hallData={item}
-                    checkin={checkin}
-                    checkout={checkout}
-                    availability={availability}
-                  />
+            allHalls?.halls
+              .filter((hall) => hall.category === hallType)
+              .map(
+                (item) =>
+                  Object.keys(availability).includes(item.category) && (
+                    <HallDetailsCard
+                      key={item._id}
+                      hallData={item}
+                      checkin={checkin}
+                      checkout={checkout}
+                      availability={availability}
+                    />
+                  )
               )
-            ))
-          }
+          )}
         </div>
       )}
     </header>

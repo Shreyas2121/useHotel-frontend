@@ -32,6 +32,9 @@ interface ResStatus {
 const Rooms = () => {
   const { data: allRooms, loading }: Res = UseFetch(`room/getDetails`);
 
+  const bookingRoom =
+    "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80";
+
   const [check, setCheck] = useState<any>();
   const [checkIn, setCheckIn] = useState<any>("");
 
@@ -109,7 +112,7 @@ const Rooms = () => {
     <header>
       <div
         className="p-5 text-center bg-image parallax"
-        style={{ backgroundImage: `url(${roomsBackground})`, height: "50rem" }}
+        style={{ backgroundImage: `url(${bookingRoom})`, height: "50rem" }}
       >
         <div className="mask" style={{ backgroundColor: "rgba(0, 0, 0, 0.6)" }}>
           <div className="d-flex justify-content-center align-items-center h-100">
