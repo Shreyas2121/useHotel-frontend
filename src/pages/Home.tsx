@@ -27,13 +27,18 @@ const Home = () => {
               <h1
                 className="mb-2"
                 style={{
-                  font: "5rem bold",
+                  fontSize: "5rem",
+                  fontWeight: "bold",
                 }}
               >
                 A Best Place To Stay
               </h1>
               <h6 className="mb-3">MAKE YOUR VACATION HAPPY</h6>
-              <a href="/rooms"  className="btn btn-outline-light btn-lg" role="button" >
+              <a
+                href="/rooms"
+                className="btn btn-outline-light btn-lg"
+                role="button"
+              >
                 Book Now
               </a>
             </div>
