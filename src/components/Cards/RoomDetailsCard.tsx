@@ -82,6 +82,8 @@ const RoomDetailsCard = ({ roomData, checkin, checkout, status }: Props) => {
 
   const bookingDetails = {
     no,
+    numOfDays:
+      Math.abs(checkout.getTime() - checkin.getTime()) / (1000 * 3600 * 24),
     checkin,
     checkout,
     type: roomType,
