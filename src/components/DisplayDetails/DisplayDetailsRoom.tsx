@@ -111,9 +111,7 @@ const DisplayDetails = ({ RoomBookingDetails, setDel }: Props) => {
                           booking.check_in_date,
                           booking.check_out_date  
                         ) ? (
-                          <span id="Ongoing">
-                            ---
-                          </span>
+                          <label>Upcomming</label>
                         ) : (
                           <span>
                             <Button id="AddReview">
