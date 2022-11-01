@@ -129,7 +129,15 @@ const Halls = () => {
                     id="check-in"
                     className="input-date"
                     min={new Date().toISOString().split("T")[0]}
-                    max={check}
+                    max={
+                      checkOut
+                        ? checkOut
+                        : convertDateToSpecificFormat(
+                            new Date(
+                              new Date().getTime() + 30 * 24 * 60 * 60 * 1000
+                            )
+                          )
+                    }
                     type="date"
                     onChange={(e) => setCheckIn(e.target.value)}
                     onKeyDown={(e) => e.preventDefault()}
