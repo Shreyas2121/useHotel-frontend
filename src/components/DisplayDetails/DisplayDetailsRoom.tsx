@@ -8,21 +8,18 @@ import { Link } from "react-router-dom";
 import "./DisplayDetails.css";
 import { Checkmark } from "react-checkmark";
 
-
 interface Props {
   RoomBookingDetails: BookingRoom[];
   setDel: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-
-const DisplayDetails = ({ RoomBookingDetails, setDel }: Props) => {  
+const DisplayDetails = ({ RoomBookingDetails, setDel }: Props) => {
   const deleteRoombooking = async (id: string) => {
     const res = await axios.delete(`booking/room/${id}`);
-    console.log(res);
+
     if (res.status === 200) {
       setDel(true);
       toast.success("Reservation deleted successfully");
-      
     } else {
       toast.error("Something went wrong");
     }
@@ -42,26 +39,17 @@ const DisplayDetails = ({ RoomBookingDetails, setDel }: Props) => {
   const check = (date: string) => {
     const newDate = new Date(date);
     const currentDate = new Date();
-    if (newDate.getFullYear() === currentDate.getFullYear()) {
-      if (newDate.getMonth() <= currentDate.getMonth()) {
-        if (newDate.getDate() <= currentDate.getDate()) {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        return false;
-      }
-    } else if (newDate.getFullYear() < currentDate.getFullYear()) {
+
+    if (newDate < currentDate) {
       return true;
+    } else {
+      return false;
     }
   };
 
   return (
     <div id="table-div">
-      <h5>
-        Room bookings Found for E-mail:
-      </h5>
+      <h5>Room bookings Found for E-mail:</h5>
       <Table striped bordered hover>
         <thead>
           <tr id="table-headings">
@@ -109,7 +97,7 @@ const DisplayDetails = ({ RoomBookingDetails, setDel }: Props) => {
                       <span>
                         {check_ongoin(
                           booking.check_in_date,
-                          booking.check_out_date  
+                          booking.check_out_date
                         ) ? (
                           <label>Upcomming</label>
                         ) : (

@@ -13,11 +13,9 @@ interface Props {
   setDel: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const DisplayDetailsHall = ({HallBookingDetails, setDel }: Props) => {
+const DisplayDetailsHall = ({ HallBookingDetails, setDel }: Props) => {
   const deleteHallbooking = async (id: string) => {
-    const res = await axios.delete(
-      `booking/hall/${id}`
-    );
+    const res = await axios.delete(`booking/hall/${id}`);
     console.log(res);
     if (res.status === 200) {
       setDel(true);
@@ -40,26 +38,17 @@ const DisplayDetailsHall = ({HallBookingDetails, setDel }: Props) => {
   const check = (date: string) => {
     const newDate = new Date(date);
     const currentDate = new Date();
-    if (newDate.getFullYear() === currentDate.getFullYear()) {
-      if (newDate.getMonth() <= currentDate.getMonth()) {
-        if (newDate.getDate() <= currentDate.getDate()) {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        return false;
-      }
-    } else if (newDate.getFullYear() < currentDate.getFullYear()) {
+
+    if (newDate < currentDate) {
       return true;
+    } else {
+      return false;
     }
   };
 
   return (
     <div id="table-div">
-      <h5>
-        Hall bookings Found for E-mail:
-      </h5>
+      <h5>Hall bookings Found for E-mail:</h5>
       <Table striped bordered hover>
         <thead>
           <tr id="table-headings">
