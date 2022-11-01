@@ -1,13 +1,16 @@
 import { UseFetch } from "../../customHook/UseFetch";
 import { Review } from "../../types/types";
 
-import { Rating } from "@mui/material";
 import { MDBContainer, MDBTypography } from "mdb-react-ui-kit";
 import { Carousel } from "react-bootstrap";
 import Person from "../../assets/images/person.png";
 import "./slider.css";
 import "./cards.css";
 import Loader from "../../Loader";
+
+import RatingCard from "react-star-ratings";
+
+import { BsChevronDoubleRight } from "react-icons/bs";
 
 interface Res {
   data: {
@@ -65,7 +68,34 @@ const Reviewcards = ({ isFeatured }) => {
           className="carousel slide carousel-dark text-center"
           data-mdb-ride="carousel"
         >
-          <Carousel>
+          <Carousel
+            controls={true}
+            indicators={true}
+            className="carousel slide carousel-dark text-center"
+            interval={1500}
+            nextIcon={
+              <span
+                style={{
+                  color: "black",
+                  fontSize: "30px",
+                  fontWeight: "bold",
+                }}
+              >
+                {">>"}
+              </span>
+            }
+            prevIcon={
+              <span
+                style={{
+                  color: "black",
+                  fontSize: "30px",
+                  fontWeight: "bold",
+                }}
+              >
+                {"<<"}
+              </span>
+            }
+          >
             {loading ? (
               <Loader />
             ) : (
@@ -94,11 +124,13 @@ const Reviewcards = ({ isFeatured }) => {
                             />
                             <h5 className="Review-name">{review_data.name}</h5>
                             <p>
-                              <Rating
-                                name="read-only"
-                                value={review_data.rating}
-                                readOnly
-                              />{" "}
+                              <RatingCard
+                                rating={review_data.rating}
+                                starRatedColor="orange"
+                                numberOfStars={5}
+                                starDimension="20px"
+                                starSpacing="2px"
+                              />
                             </p>
                             <p className="review-text">
                               <i className="fas fa50%-quote-left pe-2"></i>

@@ -10,21 +10,19 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@emotion/react": "^11.10.4",
-    "@emotion/styled": "^11.10.4",
-    "@mui/material": "^5.10.10",
+    "@types/react-star-ratings": "^2.3.0",
     "axios": "^1.1.2",
     "bootstrap": "^5.2.2",
     "mdb-react-ui-kit": "^4.2.0",
     "mdb-ui-kit": "^5.0.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.5.0",
-    "react-calendar": "^3.9.0",
     "react-checkmark": "^1.4.0",
     "react-device-detect": "^2.2.2",
     "react-dom": "^18.2.0",
     "react-icons": "^4.6.0",
     "react-router-dom": "^6.4.2",
+    "react-star-ratings": "^2.3.0",
     "react-toastify": "^9.0.8",
     "react-top-loading-bar": "^2.3.1",
     "run": "^1.4.0"

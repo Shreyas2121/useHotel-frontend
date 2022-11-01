@@ -21,6 +21,9 @@ const AddReview = lazy(() => import("./pages/Reviews/AddReview"));
 const Checkbooking = lazy(() => import("./pages/Checkbooking"));
 const ConfirmDetails = lazy(() => import("./pages/success/ConfirmDetails"));
 
+import "mdb-react-ui-kit/dist/css/mdb.min.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+
 function App() {
   const location = useLocation();
 
