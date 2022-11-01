@@ -25,14 +25,19 @@ const Reviewcards = ({ isFeatured }) => {
 
   const { data, loading }: Res = UseFetch(`${path}`);
 
+ 
+
   return (
+  
     <MDBContainer
       fluid
       style={{
         height: "40rem",
       }}
     >
+       
       <div
+
         style={{
           textAlign: "center",
           padding: "40px",
@@ -51,7 +56,10 @@ const Reviewcards = ({ isFeatured }) => {
         </MDBTypography>
       </div>
 
-      <div>
+      <div className="text-center">
+        { data?.Review?.length===0 ?(
+                      <h2>No Reviews Posted Yet!</h2>
+                    ) : (
         <div
           id="carouselMultiItemExample"
           className="carousel slide carousel-dark text-center"
@@ -62,6 +70,7 @@ const Reviewcards = ({ isFeatured }) => {
               <Loader />
             ) : (
               data?.Review?.map((review_data) => (
+              
                 <Carousel.Item>
                   <div className="carousel-inner py-4">
                     <div className="carousel-item active" style={{}}>
@@ -73,9 +82,10 @@ const Reviewcards = ({ isFeatured }) => {
                       >
                         <div className="row">
                           <div
+
                             className="col-lg-14 shadow-4-strong"
                             id="review-cards"
-                          >
+                          >  
                             <img
                               className="rounded-circle shadow-1-strong mb-4"
                               src={Person}
@@ -93,18 +103,22 @@ const Reviewcards = ({ isFeatured }) => {
                             <p className="review-text">
                               <i className="fas fa50%-quote-left pe-2"></i>
                               {review_data.review}
+                          
                             </p>
                           </div>
                         </div>
                       </div>
                     </div>
+                 
                   </div>
+                  
                 </Carousel.Item>
               ))
             )}
           </Carousel>
         </div>
-      </div>
+        )}
+      </div>        
     </MDBContainer>
   );
 };
