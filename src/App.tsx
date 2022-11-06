@@ -23,6 +23,8 @@ const ConfirmDetails = lazy(() => import("./pages/success/ConfirmDetails"));
 
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Register from "./pages/register/Register";
+import Login from "./pages/register/Login";
 
 function App() {
   const location = useLocation();
@@ -80,6 +82,8 @@ function App() {
           <Route path="booking/success" element={<ConfirmDetails />} />
           <Route path="addreview" element={<AddReview />} />
           <Route path="checkbooking" element={<Checkbooking />} />
+          <Route path="register" element={<Register />} />
+          <Route path="login" element={<Login />} />
         </Routes>
       </Suspense>
       <Footer />

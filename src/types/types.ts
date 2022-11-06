@@ -58,7 +58,7 @@ export interface BookingRoom {
   check_in_date: string;
   check_out_date: string;
   add_ons: Addon[];
-  coupon: any
+  coupon: any;
   num_of_rooms: number;
   price: string;
   category: string;
@@ -75,9 +75,17 @@ export interface BookingHall {
   check_out_date: string;
   category: string;
   add_ons: Addon[];
-  coupon: any
+  coupon: any;
   num_of_rooms: number;
   price: string;
   special_request: string;
   total: string;
+}
+
+export interface User {
+  _id?: string;
+  name?: string;
+  email: string;
+  password: string;
+  phone?: string;
 }

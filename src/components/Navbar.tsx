@@ -3,12 +3,19 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import "./navbar.css";
 import hotelIcon from "../../public/hotel_icon1.png";
+import { logoutUser, selectUser } from "../store/userSlice";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 
 const NavBar = () => {
+  const user = useAppSelector(selectUser);
+
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
   return (
     <Navbar bg="dark" variant="dark" expand="lg" sticky="top">
       <Container>
@@ -33,6 +40,27 @@ const NavBar = () => {
             <Nav.Link as={Link} to="/aboutus">
               About Us
             </Nav.Link>
+          </Nav>
+
+          <Nav>
+            {!user ? (
+              <Nav.Link as={Link} to="/login">
+                Login
+              </Nav.Link>
+            ) : (
+              <div
+                style={{
+                  fontWeight: "bold",
+                  color: "white",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  dispatch(logoutUser({ navigate }));
+                }}
+              >
+                Logout
+              </div>
+            )}
           </Nav>
 
           <NavDropdown title="More" id="account1">
