@@ -5,6 +5,7 @@ import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { UseFetch } from "../../customHook/UseFetch";
 import { useAppSelector } from "../../store/hooks";
+import { useGetAddonsQuery } from "../../store/roomsSlice";
 import { selectUser } from "../../store/userSlice";
 import { Addon } from "../../types/types";
 import "./bookingform.css";
@@ -56,7 +57,10 @@ export const BookingForm = () => {
 
   let total_price = totalPrice;
 
-  const { data: addOnData, loading }: ResAddon = UseFetch(`addon`);
+  const { data, isLoading: loading } = useGetAddonsQuery("");
+
+  let addOnData: Addon[] = data;
+
   let addOns = {};
   if (!loading) {
     addOnData.forEach((item) => {
@@ -110,6 +114,7 @@ export const BookingForm = () => {
     const res = await axios.post("coupon/validate", {
       coupon,
     });
+    console.log(res);
 
     if (res.data == "Invalid Coupon") {
       toast.error(res.data);
@@ -128,6 +133,7 @@ export const BookingForm = () => {
     e.preventDefault();
     setDiscount(0);
     toast.success("Coupon Removed Successfully");
+    couponRef.current.innerText = "";
     couponRef.current.disabled = false;
     setTotal(totalPrice);
     buttonCouponRemoveRef.current.disabled = true;
@@ -139,13 +145,6 @@ export const BookingForm = () => {
       price += each;
     });
     return price;
-  };
-
-  const validateInputFields = () => {
-    if (nameRef.current.value === "" || emailRef.current.value === "") {
-      return false;
-    }
-    return true;
   };
 
   const calculateTotalPrice = () => {
@@ -165,34 +164,23 @@ export const BookingForm = () => {
   };
 
   const bookRoom = async (res, data) => {
-    return (res = await axios.post(`booking/room`, data, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }));
+    return (res = await axios.post(`book/room`, data));
   };
 
   const submitBooking = async (e: any) => {
     e.preventDefault();
-    const name = nameRef.current?.value;
-    // const email = emailRef.current?.value;
-    const specialReq = specialReqRef.current?.value;
 
-    if (!validateInputFields()) {
-      toast.error("Please fill all the fields");
-      return;
-    }
+    const specialReq = specialReqRef.current?.value;
 
     const selectedAddons = filterAddons();
     const data = {
-      name,
-      email: user.email,
-      date: new Date(),
-      specialReq,
+      user: user._id,
+      bookingDate: new Date(),
+      specialRequest: specialReq,
       selectedAddons,
-      no,
-      checkin,
-      checkout,
+      numOfRooms: no,
+      checkIn: checkin,
+      checkOut: checkout,
       category: type,
       basePrice,
       coupon: {
@@ -209,10 +197,12 @@ export const BookingForm = () => {
       res = await bookRoom(res, data);
     }
 
-    if (res.data.message == "Booking Successful") {
+    console.log(res.data);
+
+    if (res.data.message == "Booking created") {
       toast.success("Booking Successful");
       navigate("/booking/success", {
-        state: { data, key },
+        state: { data: res.data.booking, key },
       });
     } else {
       toast.error("Booking Failed");
@@ -240,7 +230,7 @@ export const BookingForm = () => {
                     <Form.Control
                       id="name-id"
                       type="text"
-                      ref={nameRef}
+                      value={user.name}
                       required
                     />
                   </Form.Group>

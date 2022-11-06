@@ -12,6 +12,10 @@ import roomsBackground from "../assets/images/about_banner.jpg";
 import Button from "react-bootstrap/Button";
 import { toast } from "react-toastify";
 import Loader from "../Loader";
+import {
+  useCheckAvailabilityMutation,
+  useGetRoomsQuery,
+} from "../store/roomsSlice";
 
 interface Res {
   data: {
@@ -30,7 +34,10 @@ interface ResStatus {
 }
 
 const Rooms = () => {
-  const { data: allRooms, loading }: Res = UseFetch(`room/getDetails`);
+  // const { data: allRooms, loading }: Res = UseFetch(`rooms`);
+  const { data, isLoading: loading }: any = useGetRoomsQuery("");
+  const [checkAvail] = useCheckAvailabilityMutation();
+  let allRooms: Room[] = data;
 
   const bookingRoom =
     "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80";
@@ -79,19 +86,14 @@ const Rooms = () => {
 
     e.preventDefault();
 
-    const { data }: ResStatus = await axios.post(
-      "booking/room/availability",
-      {
-        checkIn: checkin.toISOString(),
-        checkOut: checkout.toISOString(),
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    setStatus(data);
+    const res: any = await checkAvail({
+      checkIn: checkin.toISOString(),
+      checkOut: checkout.toISOString(),
+    });
+
+    let statusData: Status = res.data;
+
+    setStatus(statusData);
 
     window.scrollTo({
       top: 800,
@@ -186,7 +188,7 @@ const Rooms = () => {
           {loading ? (
             <Loader />
           ) : (
-            allRooms?.rooms.map((room) => (
+            allRooms?.map((room) => (
               <RoomDetailsCard
                 key={room._id}
                 roomData={room}

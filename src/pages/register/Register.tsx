@@ -36,7 +36,7 @@ const Register = () => {
       name,
       email,
       password,
-      phone,
+      phone: Number(phone),
     };
 
     dispatch(registerUser({ user, navigate }));

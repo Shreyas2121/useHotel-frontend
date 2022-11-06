@@ -15,48 +15,47 @@ interface State {
 export const registerUser = createAsyncThunk(
   "user/register",
   async ({ user, navigate }: State, { rejectWithValue }) => {
-    const response = await axios.post("auth/register", {
+    const response = await axios.post("/register", {
       user,
     });
 
-    if (!(response.data.message === "Registered Successfully")) {
-      return rejectWithValue(response.data);
+    if (!(response.data.message === "User created successfully")) {
+      return rejectWithValue(response.data.message);
     }
 
     toast.success("Registered Successfully");
 
     navigate("/");
 
-    return user;
+    return response.data.user;
   }
 );
 
 export const loginUser = createAsyncThunk(
   "user/login",
   async ({ user, navigate }: State, { rejectWithValue }) => {
-    const response = await axios.post("auth/login", {
+    const response = await axios.post("/login", {
       user,
     });
-    console.log(response.data);
 
-    if (!(response.data.message === "Logged In Successfully")) {
-      return rejectWithValue(response.data);
+    if (!(response.data.message === "Login successful")) {
+      return rejectWithValue(response.data.message);
     }
 
     toast.success("Logged In Successfully");
 
     navigate("/");
 
-    return user;
+    return response.data.user;
   }
 );
 
 export const logoutUser = createAsyncThunk(
   "user/logout",
   async ({ navigate }: any, { rejectWithValue }) => {
-    const response = await axios.get("auth/logout");
+    const response = await axios.get("/logout");
 
-    if (!(response.data.message === "Logged Out Successfully")) {
+    if (!(response.data === "Logout")) {
       return rejectWithValue(response.data);
     }
 
@@ -130,8 +129,8 @@ const userSlice = createSlice({
   },
 });
 
-export const selectUser = (state: RootState) => state.user.user;
+export const selectUser = (state: RootState) => state?.user?.user;
 
-export const selectU = (state: RootState) => state.user;
+export const selectU = (state: RootState) => state?.user;
 
 export default userSlice.reducer;

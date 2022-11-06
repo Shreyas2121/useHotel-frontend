@@ -10,9 +10,11 @@ import {
   REGISTER,
 } from "redux-persist";
 import storage from "redux-persist/es/storage";
+import { roomsApi } from "./roomsSlice";
 
 const reducers = combineReducers({
   user: userSlice,
+  [roomsApi.reducerPath]: roomsApi.reducer,
 });
 
 const persistConfig = {
@@ -24,12 +26,13 @@ const persistedReducer = persistReducer(persistConfig, reducers);
 
 const store = configureStore({
   reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
+  middleware: (getDefaultMiddleware) => {
+    return getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }),
+    }).concat(roomsApi.middleware);
+  },
 });
 
 export type RootState = ReturnType<typeof store.getState>;

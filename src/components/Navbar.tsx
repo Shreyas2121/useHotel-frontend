@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from "../store/hooks";
 
 const NavBar = () => {
   const user = useAppSelector(selectUser);
+  console.log(user);
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
