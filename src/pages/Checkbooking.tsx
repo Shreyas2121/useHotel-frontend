@@ -11,6 +11,9 @@ import roomsBackground from "../assets/images/about_banner.jpg";
 
 import "../components/parallaxImage.css";
 import DisplayDetailsHall from "../components/DisplayDetails/DisplayDetailsHall";
+import { useAppSelector } from "../store/hooks";
+import { selectUser } from "../store/userSlice";
+import { Navigate } from "react-router-dom";
 
 interface Res {
   data: BookingRoom[];
@@ -23,52 +26,39 @@ interface Res1 {
 }
 
 export const Checkbooking = () => {
-  const emailRef = React.useRef<HTMLInputElement>(null);
-  const [RoomBookingDetails, setBookingDetailsRoom] = React.useState<BookingRoom[]>(null);
-  const [HallBookingDetails, setBookingDetailsHall] = React.useState<BookingHall[]>(null);
+  const user = useAppSelector(selectUser);
+
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
+
+  // const { data, isLoading } = useGetBookingsQuery(user._id);
+
+  // let bookings: BookingRoom[] = [];
+
+  // setBookings(data);
+
   const [loading, setLoading] = React.useState<boolean>(false);
-  const [clicked, setClicked] = React.useState<boolean>(false);
   const [del, setDel] = React.useState<boolean>(false);
-  const buttonRef = React.useRef<HTMLButtonElement>(null);
+  const [bookings, setBookings] = React.useState<BookingRoom[]>([]);
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    const email = emailRef.current.value;
-    setLoading(true);
-    const { data }: Res = await axios.get(
-      `booking/room/${email}`
-    );
-    setBookingDetailsRoom(data);
+  // useEffect(() => {
+  //   const getBookings = async () => {
+  //     setLoading(true);
+  //     const res = await axios.get(`bookings/${user._id}`);
+  //     setBookings(res.data);
+  //     setLoading(false);
+  //   };
 
-    const res: Res1 = await axios.get(
-      `booking/hall/${email}`
-    );
-    console.log('hall')
-    console.log(res)
-    setBookingDetailsHall(res.data);
-    setLoading(false);
-    setClicked(true);
-    window.scrollTo({
-      top: 500,
-      behavior: "smooth",
-    });
-  };
+  //   getBookings();
+  // }, []);
 
   useEffect(() => {
     const a = async () => {
-      const email = emailRef.current.value;
       setLoading(true);
-      const { data }: Res = await axios.get(
-        `booking/room/${email}`
-      );
-      setBookingDetailsRoom(data);
+      const { data } = await axios.get(`bookings/${user._id}`);
+      setBookings(data);
 
-
-      const res : Res1 = await axios.get(
-        `booking/hall/${email}`
-      );
-      
-      setBookingDetailsHall(res.data);
       setLoading(false);
     };
     a();
@@ -99,99 +89,45 @@ export const Checkbooking = () => {
             width: "100%",
             maxWidth: "100%",
             padding: "2rem",
-            justifyContent:  "space-around"
-
-
-          }}
-        > <Form onSubmit={handleSubmit}
-          style={{
-            width: "100%",
-            maxWidth: "600px",
-            padding: "1rem",
-            display: "flex",
-            flexDirection: "row",
-            
+            justifyContent: "space-around",
           }}
         >
-          <Form.Control
-            ref={emailRef}
-            type="email"
-            className="me-auto"
-            placeholder="Enter Email"
-
-            
-          />
-          
-          <Button type="submit" variant="secondary"  ref={buttonRef}>
-            Check
-          </Button>
-        </Form>
+          {" "}
         </Stack>
       </div>
 
       <div>
-        {clicked && (
-          <Container>
-            <br />
-            <br />
-            {loading ? (
-              <h1>Loading</h1>
-            ) : (
-              <div>
-                <div
-                  style={{
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: "1rem",
-                  }}
-                >
-                  {RoomBookingDetails?.length ? (
-                    <DisplayDetails
-                      RoomBookingDetails={RoomBookingDetails}
-                      setDel={setDel}
-                    />
-                  ) : (
-                    <div
-                      style={{
-                        marginTop: "2rem",
-                        color: "red",
-                        height: "5rem",
-                      }}
-                    >
-                      <h5>No Room Bookings Found for this email: {emailRef.current.value}</h5>
-                    </div>
-                  )}
-                </div>
-
-                <div
-                  style={{
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: "1rem",
-                  }}
-                >
-                  {HallBookingDetails?.length ? (
-                
-                    <DisplayDetailsHall
-                      HallBookingDetails={HallBookingDetails}
-                      setDel={setDel}
-                    />
-                  ) : (
-                    <div
-                      style={{
-                        marginTop: "2rem",
-                        color: "red",
-                        height: "5rem",
-                      }}
-                    >
-                      <h5>No Hall Bookings Found for this email: {emailRef.current.value}</h5>
-                    </div>
-                  )}
-                </div>
+        <Container>
+          <br />
+          <br />
+          {loading ? (
+            <h1>Loading</h1>
+          ) : (
+            <div>
+              <div
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "1rem",
+                }}
+              >
+                {bookings?.length ? (
+                  <DisplayDetails bookings={bookings} setDel={setDel} />
+                ) : (
+                  <div
+                    style={{
+                      marginTop: "2rem",
+                      color: "red",
+                      height: "5rem",
+                    }}
+                  >
+                    <h5>No Room Bookings Found: </h5>
+                  </div>
+                )}
               </div>
-            )}
-          </Container>
-        )}
+            </div>
+          )}
+        </Container>
       </div>
     </header>
   );

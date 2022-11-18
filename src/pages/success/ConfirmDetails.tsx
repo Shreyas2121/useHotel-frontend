@@ -1,5 +1,6 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { BookingRoom } from "../../types/types";
 
 import "./success.css";
 
@@ -7,6 +8,7 @@ const ConfirmDetails = () => {
   const {
     state: { data, key },
   } = useLocation();
+  let details: BookingRoom = data;
 
   const navigate = useNavigate();
 
@@ -16,27 +18,27 @@ const ConfirmDetails = () => {
         <h5 className="card-title">Your Booking is confirmed!!</h5>
         <p className="card-text">
           <span>Name: </span>
-          {data.name}
+          {details.user.name}
         </p>
         <p className="card-text">
           <span>Email: </span>
-          {data.email}
+          {details.user.email}
         </p>
         <p className="card-text">
           <span>Check-in: </span>
-          {data.checkin?.toDateString()}
+          {details.checkIn}
         </p>
         <p className="card-text">
           <span>Check-out: </span>
-          {data.checkout?.toDateString()}
+          {details.checkOut}
         </p>
         <p className="card-text">
           <span>Room Type: </span>
-          {data.roomType}
+          {details.category}
         </p>
         <p className="card-text">
           <span>Total Price: </span>
-          {data.total}
+          {details.total}
         </p>
         <button onClick={() => navigate("/")} id="btn">
           Go Home

@@ -19,6 +19,10 @@ export const roomsApi = createApi({
     getAddons: build.query({
       query: () => "/addons",
     }),
+
+    getReviews: build.query({
+      query: ({ path }) => path,
+    }),
   }),
 });
 
@@ -26,4 +30,5 @@ export const {
   useGetRoomsQuery,
   useCheckAvailabilityMutation,
   useGetAddonsQuery,
+  useGetReviewsQuery,
 } = roomsApi;

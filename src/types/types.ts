@@ -44,26 +44,24 @@ export interface Addon {
 }
 
 export interface Review {
-  name: string;
-  email: string;
-  review: string;
+  bookingId: BookingRoom;
+  comment: string;
   rating: number;
 }
 
 export interface BookingRoom {
   _id: string;
-  name: string;
-  email: string;
-  date: string;
-  check_in_date: string;
-  check_out_date: string;
-  add_ons: Addon[];
+  bookingDate: string;
+  checkIn: string;
+  checkOut: string;
+  selectedAddons: any;
   coupon: any;
-  num_of_rooms: number;
+  numOfRooms: number;
   price: string;
   category: string;
-  special_request: string;
+  specialRequest: string;
   total: string;
+  user: User;
 }
 
 export interface BookingHall {

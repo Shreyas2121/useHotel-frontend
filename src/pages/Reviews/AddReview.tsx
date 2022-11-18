@@ -4,70 +4,66 @@ import { useRef, useState } from "react";
 import { Container } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "./Reviews.css";
 
 import RatingCard from "react-star-ratings";
+import { useAppSelector } from "../../store/hooks";
+import { selectUser } from "../../store/userSlice";
+
+import { BookingRoom } from "../../types/types";
+
+interface LocationState {
+  booking: BookingRoom;
+}
 
 const AddReview = () => {
   const navigate = useNavigate();
 
-  const location = useLocation();
-  const { name, email } = location.state;
+  const { booking }: LocationState = useLocation().state as any;
+  console.log(booking);
+
+  const user = useAppSelector(selectUser);
 
   const NavigateToAboutUs = () => {
     navigate("/AboutUs");
   };
 
-  const nameRef = useRef<HTMLInputElement>(null);
-  const emailRef = useRef<HTMLInputElement>(null);
   const [rating, setRating] = useState<number>(0);
   const reviewRef = useRef<HTMLTextAreaElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const submitReview = async (e: any) => {
     e.preventDefault();
-    const name = nameRef.current?.value;
-    const email = emailRef.current?.value;
     const review = reviewRef.current?.value;
 
     const data = {
-      name,
-      email,
+      bookingId: booking._id,
+      comment: review,
       rating,
-      review,
     };
 
-    const res = await axios.post("reviews", data, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const res = await axios.post("/review", data);
 
-    if (res.status === 200) {
+    if (res.data.message === "Review created") {
       toast.success("Review Submitted Successfully");
       NavigateToAboutUs();
     } else {
-      toast.error("Review Submission Failed");
+      toast.error(res.data);
     }
   };
 
-  return (
+  return !user ? (
+    <div>
+      <Navigate to="/login" />
+    </div>
+  ) : (
     <Container className="d-flex align-items-center justify-content-center">
       <div className="review-form">
         <Form onSubmit={submitReview}>
           <h2 className="Form-Title">How Was Your Experience?</h2>
           <br />
-          <Form.Group id="name">
-            <Form.Label>Name : </Form.Label>
-            <Form.Control value={name} type="text" ref={nameRef} required />
-          </Form.Group>
-          <br />
-          <Form.Group id="email">
-            <Form.Label>Email : </Form.Label>
-            <Form.Control value={email} type="email" ref={emailRef} required />
-          </Form.Group>
           <br />
           <Form.Group
             id="rating"

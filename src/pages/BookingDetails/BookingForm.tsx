@@ -195,6 +195,7 @@ export const BookingForm = () => {
       res = await bookHall(res, data);
     } else {
       res = await bookRoom(res, data);
+      console.log(res);
     }
 
     console.log(res.data);
